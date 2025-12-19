@@ -24,7 +24,7 @@ function Login() {
       if (response.ok) {
         // Store token in localStorage
         localStorage.setItem("token", data.token);
-        localStorage.setItem("role", data.username); // store role too
+        localStorage.setItem("user", data.username); // store user for App.js routing
 
         // Navigate based on role
         if (data.username === "student") {
@@ -51,6 +51,7 @@ function Login() {
         placeholder="teacher or student"
         value={form.username}
         onChange={handleChange}
+        autoComplete="username"
         required
       />
       <input
@@ -59,9 +60,10 @@ function Login() {
         placeholder="Password"
         value={form.password}
         onChange={handleChange}
+        autoComplete="current-password"
         required
       />
-      <input type="submit"/>
+      <input type="submit" />
     </form>
   );
 }
