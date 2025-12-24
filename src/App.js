@@ -6,111 +6,45 @@ import StudentDashboard from "./studentdas.jsx";
 import TeacherDashboard from "./teacherdas.jsx";
 import TeacherQueryPage from "./TeacherQueryPage.jsx";
 import StudentQueryPage from "./StudentQueryPage.jsx";
-
-const containerStyle = {
-  fontFamily: "Arial, sans-serif",
-  padding: "40px",
-  textAlign: "center",
-  backgroundColor: "#f9f9f9",
-  minHeight: "100vh",
-};
-
-const headingStyle = {
-  fontSize: "2.5rem",
-  marginBottom: "10px",
-  color: "#333",
-};
-
-const descriptionStyle = {
-  fontSize: "1.1rem",
-  marginBottom: "30px",
-  color: "#666",
-};
-
-const linkStyle = {
-  textDecoration: "none",
-  color: "#4a90e2",
-  fontWeight: "bold",
-  margin: "0 15px",
-};
+import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
-      <div style={containerStyle}>
-        <h1 style={headingStyle}>Welcome to Our App</h1>
-        <p style={descriptionStyle}>
+      <div className="main-wrapper">
+        <h1 className="heading-main">Welcome to Our App</h1>
+        <p className="description-text">
           Please login or signup to access the full features of the application.
         </p>
 
-        <div>
-          <Link to="/login" style={linkStyle}>
-            Login
-          </Link>
-          |
-          <Link to="/signup" style={linkStyle}>
-            Signup
-          </Link>
+        <div className="nav-container">
+          <Link to="/login" className="nav-link">Login</Link>
+          <span className="divider">|</span>
+          <Link to="/signup" className="nav-link">Signup</Link>
         </div>
 
         <Routes>
-          {/* Public Routes */}
+    
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
 
-          {/* Student Dashboard */}
+          
           <Route
             path="/studentdas"
-            element={
-              localStorage.getItem("token") &&
-              localStorage.getItem("user") === "student" ? (
-                <StudentDashboard />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={localStorage.getItem("stoken") ? <StudentDashboard /> : <Navigate to="/login" />}
           />
 
-          {/* Teacher Dashboard */}
+          
           <Route
             path="/teacherdas"
-            element={
-              localStorage.getItem("token") &&
-              localStorage.getItem("user") === "teacher" ? (
-                <TeacherDashboard />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
+            element={localStorage.getItem("ttoken") ? <TeacherDashboard /> : <Navigate to="/login" />}
           />
 
-          {/* Teacher Query Page */}
-          <Route
-            path="/teacherQuery"
-            element={
-              localStorage.getItem("token") &&
-              localStorage.getItem("teacherVerification") === "successful" ? (
-                <TeacherQueryPage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
+        
+          <Route path="/teacherQuery" element={localStorage.getItem("teachertoken") ?<TeacherQueryPage/> : <Navigate to="/login" />}/>
+          <Route path="/student-query" element={localStorage.getItem("studenttoken")?<StudentQueryPage/> : <Navigate to="/login"/>}/>
 
-          {/* Student Query Page */}
-          <Route
-            path="/student-query"
-            element={
-              localStorage.getItem("token") &&
-              localStorage.getItem("studentVerification") === "successful" ? (
-                <StudentQueryPage />
-              ) : (
-                <Navigate to="/login" />
-              )
-            }
-          />
-
-          {/* Fallback route */}
+          
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </div>

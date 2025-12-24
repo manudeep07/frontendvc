@@ -21,50 +21,93 @@ function Login() {
 
       const data = await response.json();
 
-      if (response.ok) {
-        // Store token in localStorage
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", data.username); // store user for App.js routing
-
-        // Navigate based on role
-        if (data.username === "student") {
-          navigate("/studentdas");
-        } else if (data.username === "teacher") {
-          navigate("/teacherdas");
-        } else {
-          alert("Unknown role");
-        }
-      } else {
-        alert("Wrong email or password");
+      if (!response.ok) {
+        alert(data.message || "Login failed");
+        return;
       }
+
+      // role is ONLY "student" or "teacher"
+      const role = data.username1.trim().toLowerCase();
+      console.log("ROLE:", role);
+
+      if (role === "student") {
+        localStorage.setItem("stoken", data.token1);
+        localStorage.setItem("user", data.username1);
+        navigate("/studentdas", { replace: true });
+      } 
+      else if (role === "teacher") {
+        localStorage.setItem("ttoken", data.token1);
+        localStorage.setItem("user", data.username1);
+        navigate("/teacherdas", { replace: true });
+      } 
+      else {
+        alert("Invalid role in database");
+      }
+
     } catch (err) {
-      alert("Something went wrong. Please try again.");
+      console.error("Login Error:", err);
+      alert("Server is not responding");
     }
   };
 
+  const formContainerStyle = {
+    background: "white",
+    padding: "30px",
+    borderRadius: "12px",
+    boxShadow: "0 8px 24px rgba(0,0,0,0.1)",
+    width: "100%",
+    maxWidth: "400px",
+    margin: "0 auto"
+  };
+
+  const inputStyle = {
+    width: "100%",
+    padding: "12px",
+    margin: "10px 0",
+    borderRadius: "6px",
+    border: "1px solid #ddd"
+  };
+
+  const buttonStyle = {
+    width: "100%",
+    padding: "12px",
+    backgroundColor: "#4a90e2",
+    color: "white",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontWeight: "bold",
+    marginTop: "10px"
+  };
+
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Login</h2>
-      <input
-        type="text"
-        name="username"
-        placeholder="teacher or student"
-        value={form.username}
-        onChange={handleChange}
-        autoComplete="username"
-        required
-      />
-      <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        value={form.password}
-        onChange={handleChange}
-        autoComplete="current-password"
-        required
-      />
-      <input type="submit" />
-    </form>
+    <div style={formContainerStyle}>
+      <form onSubmit={handleSubmit}>
+        <h2 style={{ marginBottom: "20px" }}>Login</h2>
+
+        <input
+          type="text"
+          name="username"
+          placeholder="Username"
+          style={inputStyle}
+          value={form.username}
+          onChange={handleChange}
+          required
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          style={inputStyle}
+          value={form.password}
+          onChange={handleChange}
+          required
+        />
+
+        <input type="submit" style={buttonStyle} value="Login" />
+      </form>
+    </div>
   );
 }
 
